@@ -3856,6 +3856,15 @@ client.on('message', msg => {
         }
 
     }
+    if (command === "-cf") {
+        if (msg.author.id === Developer) {
+            let text = args.slice(0).join(" ");
+            msg.delete();
+            msg.channel.send("`" + `${text}` + "`");
+            console.log('worked');
+        }
+
+    }
     if (command === "-call ") {
         let ring = args.slice(0).join(" ");
         
