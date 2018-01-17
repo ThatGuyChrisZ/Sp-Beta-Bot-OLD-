@@ -355,10 +355,10 @@ client.on('message', msg => {
         client.user.setGame('I Eat Savage pizza');
     };
     if (msg.content === '-drunk') {
-        client.user.setGame('drinking a 12 pack of Eggnog');
+        client.user.setGame('drinking a 12 pack of Budlight');
         msg.reply('god i drank one too many beers');
     };
-    client.user.setGame('drinking a 12 pack of Eggnog');
+    client.user.setGame('drinking a 12 pack of Budlight');
     if (command === "-warnet") {
 
         msg.channel.send({
