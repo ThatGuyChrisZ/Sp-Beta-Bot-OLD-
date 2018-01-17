@@ -3192,7 +3192,7 @@ client.on('message', msg => {
                 },
                 title: 'Commands:',
 
-                description: 'Mostly complete documentation on available commands and Uses!!',
+                description: 'Mostly complete documentation on available commands and how to use!!',
                 fields: [{
 
                     name: '-sptournament ',
