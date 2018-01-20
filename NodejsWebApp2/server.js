@@ -28,6 +28,7 @@ var splayed = 0;
 var toplay1;
 var toplay2;
 var toplay3;
+var canrep = 'yes';
 var playing = 'no';
 var thismessage;
 var currentpos = 0;
@@ -41,6 +42,7 @@ var dscore;
 var ww;
 var aw;
 var gpower;
+var yourrep = 1;
 var o1 = 'none';
 var o2 = 'none';
 var o3 = 'none';
@@ -63,6 +65,7 @@ var s4;
 var s5;
 var qbegin;
 var current = 0;
+
 //const ytdl = require('ytdl-core');
 //const streamOptions = { seek: 0, volume: 1 };
 //const broadcast = client.createVoiceBroadcast();
@@ -2238,7 +2241,7 @@ client.on('message', msg => {
         if (msg.author.id === Developer) {
             var rin = msg.mentions.roles.first().name;
           var rid =  msg.mentions.roles.first().id;
-          client.channels.get('389158614557917194').send('The Id of the '  + rin + 'role is' + rid);
+          client.channels.get('403698545498128384').send('The Id of the '  + rin + 'role is' + rid);
             
 
 
@@ -2841,17 +2844,140 @@ client.on('message', msg => {
 
     }
     if (command === "-endtrade") {
-
-
-        msg.channel.delete()
+        var ismiddleman = msg.member.roles.has('401049480729722900');
+        if (ismiddleman === true) {
+            msg.channel.delete()
+        }
 
     }
+    if (command === "-claim") {
+        var ismiddleman = msg.member.roles.has('401049480729722900');
+        if (ismiddleman === true){
+            var channame = msg.channel.name;
+        msg.channel.setName('Claimed-' + channame)
+        }
+        
+
+    }
+    if (command === "-myrep") {
+        var fs = require('fs');
+        setTimeout (myrepfunc, 250)
+        function myrepfunc() {
+            fs.readFile('C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2' + "/" + msg.author.id + "rep" + ".txt", 'utf8', function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+                yourrep = data
+
+                setTimeout(myFunction2, 500)
+                function myFunction2() {
+
+                    msg.reply("Your rep level is: " + yourrep)
+
+                }
+
+            });
+        }
+    }
+    if (command === "-tradereg") {
+        yourrep = 0
+        canrep = 'yes'
+        var fs = require('fs');
+        fs.writeFile("C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2" + "/" + msg.author.id +"rep" +".txt", yourrep, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            msg.reply('You are now a registered trader')
+            console.log("The file was saved!");
+        });
+        var fs = require('fs');
+        fs.writeFile("C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2" + "/" + msg.author.id + "canrep" + ".txt", canrep, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            
+            console.log("The file was saved!");
+        });
+    }
+    if (command === "-rep+") {
+        
+        var fs = require('fs');
+        if (msg.mentions.members.size < 1) {
+            msg.reply('that is not a valid target')
+        }
+        else {
+            var target2 = msg.mentions.members.first();
+            var target = msg.mentions.members.first().id;
+        }
+        console.log(target)
+        setTimeout(myfunc1, 500)
+        var fs = require('fs');
+        function myfunc1() {
+            fs.readFile('C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2' + "/" +target + "rep" + ".txt", 'utf8', function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+                yourrep = data
+                console.log('the file was read')
+            });
+
+
+            
+            fs.readFile('C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2' + "/" + msg.author.id + "canrep" + ".txt", 'utf8', function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+                
+
+                canrep = data
+                console.log("The file was read!");
+            });
+        }
+        setTimeout(myfunc2, 1000)
+        function myfunc2(){
+            if (canrep === 'yes') {
+                canrep = 'no'
+                console.log(msg.mentions.members.size)
+                var newrep = yourrep - -1
+                var mentiontest = msg.mentions.members.first()
+                if (msg.mentions.members.size < 1) {
+                    
+                }
+                else {
+                    console.log(target2.id)
+                    if (msg.author.id === target2.id) { msg.reply('You can not  rep yourself') }
+                    else {
+                        var target = msg.mentions.members.first().id;
+                        fs.writeFile("C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2" + "/" + msg.author.id + "canrep" + ".txt", canrep, function (err) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                            msg.reply('you used your only + rep on ' + target2)
+
+
+                            console.log("The file was saved!");
+                        });
+                        fs.writeFile("C:/Users/User/Documents/Visual Studio 2017/Projects/NodejsWebApp2" + "/" + target + "rep" + ".txt", newrep, function (err) {
+                            if (err) {
+                                return console.log(err);
+                            }
+
+
+                            console.log("The file was saved!");
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+
     if (command === "-ban") {
         if (msg.author.id === Developer) {
             let targetpractice = args[0];
             let reason = args.slice(1).join(" ");
             msg.channel.send(`the target has been banned for ${reason}`);
-            var target = msg.mentions.members.first();
+            
 
             target.ban( `${reason}`);
 
@@ -2934,6 +3060,60 @@ client.on('message', msg => {
 // =>
 // { name: 'Emanuela Colta',
 //   bio: 'Junior Full-Stack Web Developer | ...' }
+    }
+    if (command === "-discordstatus") {
+
+
+        let stuff;
+        
+        var ulink = `https://status.discordapp.com/`
+        // Scrape Warbrines's profile
+        scrapeIt(`https://status.discordapp.com/`, {
+            rt: "#custom-metrics-container > div.metrics-container > div > div.metric-meta.font-large > div.metric-average.color-secondary"
+            , api: "body > div.layout-content.status.status-index.starter > div.container > div.components-section.font-regular > div.components-container.one-column > div:nth-child(1) > div > span.component-status",
+            apiup: "body > div.layout-content.status.status-index.starter > div.container > div.components-section.font-regular > div.components-container.one-column > div:nth-child(1) > div > div > div > div.legend-item.legend-item-uptime-value",
+            gateway: "body > div.layout-content.status.status-index.starter > div.container > div.components-section.font-regular > div.components-container.one-column > div:nth-child(2) > div > span.component-status",
+            gup: "body > div.layout-content.status.status-index.starter > div.container > div.components-section.font-regular > div.components-container.one-column > div:nth-child(2) > div > div > div > div.legend-item.legend-item-uptime-value"
+
+
+
+        }).then(content => msg.channel.send(new Discord.RichEmbed()
+            .setTitle("Discord Status")
+            .setAuthor("Api and status", "https://cdn-images-1.medium.com/max/230/1*OoXboCzk0gYvTNwNnV4S9A@2x.png")
+            /*
+             * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+             */
+            .setColor(0x00AE86)
+            .setDescription("Fetching from status.discordapp.com")
+            .setFooter("Generated By: C-Bot", "https://cdn-images-1.medium.com/max/230/1*OoXboCzk0gYvTNwNnV4S9A@2x.png"  )
+            .setImage("https://cdn-images-1.medium.com/max/230/1*OoXboCzk0gYvTNwNnV4S9A@2x.png")
+            .setThumbnail("https://cdn-images-1.medium.com/max/230/1*OoXboCzk0gYvTNwNnV4S9A@2x.png")
+            /*
+             * Takes a Date object, defaults to current date.
+             */
+            .setTimestamp()
+            .setURL("https://discord.js.org/#/docs/main/indev/class/RichEmbed")
+            
+            .addField("Gateway Status",
+            "Status: " + content.gateway)
+            .addField("Gateway Uptime",
+           "Status: " + content.gup)
+            .addField("API Status",
+           "Status: " + content.api)
+            .addField("API Uptime",
+            "Status: " + content.apiup)
+            /*
+             * Inline fields may not display as inline if the thumbnail and/or image is too big.
+             */
+            .addField("Link to api:", ulink, true)
+
+            .addBlankField(true)
+            .addField("__________", "_", true)).catch(console.error));
+
+
+        // =>
+        // { name: 'Emanuela Colta',
+        //   bio: 'Junior Full-Stack Web Developer | ...' }
     }
     if (command === "-spadvertise") {
         let post = args[0];
@@ -4627,7 +4807,7 @@ client.on('message', msg => {
                 timestamp: new Date(),
                 footer: {
                     icon_url: client.user.avatarURL,
-                    text: "Â© Chris"
+                    text: "© Chris"
                 }
             }
         });
@@ -4653,7 +4833,7 @@ client.on('message', msg => {
                 timestamp: new Date(),
                 footer: {
                     icon_url: client.user.avatarURL,
-                    text: "Â© Generated by C-Bot"
+                    text: "© Generated by C-Bot"
                 }
             }
         });
@@ -4940,4 +5120,4 @@ client.on('message', msg => {
 
 
 
-client.login('');
+client.login('MzQxMzAzMTEyMjEzOTg3MzI5.DUMP2g.I1qBUqjbboZl36HvgFhqRhdImtg');
